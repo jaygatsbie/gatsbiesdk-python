@@ -138,6 +138,63 @@ class DatadomeSliderSolution:
     user_agent: str
 
 
+@dataclass
+class CaptchaFoxCookies:
+    """Cookies returned by CaptchaFox."""
+
+    bm_s: str
+    bm_sc: str
+
+
+@dataclass
+class CaptchaFoxSolution:
+    """Solution for CaptchaFox challenges."""
+
+    cookie: CaptchaFoxCookies
+    user_agent: str
+
+
+@dataclass
+class CastleSolution:
+    """Solution for Castle challenges."""
+
+    token: str
+    user_agent: str
+
+
+@dataclass
+class Reese84Solution:
+    """Solution for Incapsula Reese84 challenges."""
+
+    reese84: str
+    user_agent: str
+
+
+@dataclass
+class ForterSolution:
+    """Solution for Forter challenges."""
+
+    token: str
+    user_agent: str
+
+
+@dataclass
+class FuncaptchaSolution:
+    """Solution for Funcaptcha challenges."""
+
+    token: str
+    user_agent: str
+
+
+@dataclass
+class SBSDSolution:
+    """Solution for Akamai SBSD challenges."""
+
+    bm_s: str
+    bm_sc: str
+    user_agent: str
+
+
 # ============================================================================
 # Request Types
 # ============================================================================
@@ -229,3 +286,68 @@ class DatadomeSliderRequest:
     proxy: str
     target_url: str
     target_method: str = "GET"
+
+
+@dataclass
+class CaptchaFoxRequest:
+    """Request for solving CaptchaFox challenges."""
+
+    proxy: str
+    target_url: str
+    site_key: str
+
+
+@dataclass
+class CastleConfigJSON:
+    """Castle configuration parameters."""
+
+    pk: str
+    w_url: str
+    sw_url: str
+    avoid_cookies: bool = False
+
+
+@dataclass
+class CastleRequest:
+    """Request for solving Castle challenges."""
+
+    proxy: str
+    target_url: str
+    config_json: CastleConfigJSON
+
+
+@dataclass
+class Reese84Request:
+    """Request for solving Incapsula Reese84 challenges."""
+
+    proxy: str
+    reese84_js_url: str
+
+
+@dataclass
+class ForterRequest:
+    """Request for solving Forter challenges."""
+
+    proxy: str
+    target_url: str
+    forter_js_url: str
+    site_id: str
+
+
+@dataclass
+class FuncaptchaRequest:
+    """Request for solving Funcaptcha challenges."""
+
+    proxy: str
+    target_url: str
+    custom_api_host: str
+    public_key: str
+
+
+@dataclass
+class SBSDRequest:
+    """Request for solving Akamai SBSD challenges."""
+
+    proxy: str
+    target_url: str
+    target_method: str

@@ -9,6 +9,11 @@ from .types import (
     AkamaiCookies,
     AkamaiRequest,
     AkamaiSolution,
+    CaptchaFoxCookies,
+    CaptchaFoxRequest,
+    CaptchaFoxSolution,
+    CastleRequest,
+    CastleSolution,
     CloudflareWAFCookies,
     CloudflareWAFRequest,
     CloudflareWAFSolution,
@@ -16,12 +21,20 @@ from .types import (
     DatadomeSliderRequest,
     DatadomeSliderSolution,
     DatadomeSolution,
+    ForterRequest,
+    ForterSolution,
+    FuncaptchaRequest,
+    FuncaptchaSolution,
     HealthResponse,
     PerimeterXCookies,
     PerimeterXRequest,
     PerimeterXSolution,
     RecaptchaV3Request,
     RecaptchaV3Solution,
+    Reese84Request,
+    Reese84Solution,
+    SBSDRequest,
+    SBSDSolution,
     ShapeRequest,
     ShapeSolution,
     SolveResponse,
@@ -434,6 +447,196 @@ class Client:
         data = self._post("/v1/solve/datadome-slider", body)
         solution = DatadomeSliderSolution(
             datadome=data["solution"]["datadome"],
+            user_agent=data["solution"]["ua"],
+        )
+        return SolveResponse(
+            success=data["success"],
+            task_id=data["taskId"],
+            service=data["service"],
+            solution=solution,
+            cost=data["cost"],
+            solve_time=data["solveTime"],
+        )
+
+    def solve_captchafox(
+        self, request: CaptchaFoxRequest
+    ) -> SolveResponse[CaptchaFoxSolution]:
+        """Solve a CaptchaFox challenge.
+
+        Args:
+            request: The CaptchaFox request parameters.
+
+        Returns:
+            SolveResponse containing the CaptchaFox solution.
+        """
+        body = {
+            "task_type": "captchafox",
+            "proxy": request.proxy,
+            "target_url": request.target_url,
+            "site_key": request.site_key,
+        }
+        data = self._post("/v1/solve/captchafox", body)
+        cookie_data = data["solution"]["cookie"]
+        cookie = CaptchaFoxCookies(
+            bm_s=cookie_data["bm_s"],
+            bm_sc=cookie_data["bm_sc"],
+        )
+        solution = CaptchaFoxSolution(
+            cookie=cookie,
+            user_agent=data["solution"]["ua"],
+        )
+        return SolveResponse(
+            success=data["success"],
+            task_id=data["taskId"],
+            service=data["service"],
+            solution=solution,
+            cost=data["cost"],
+            solve_time=data["solveTime"],
+        )
+
+    def solve_castle(self, request: CastleRequest) -> SolveResponse[CastleSolution]:
+        """Solve a Castle challenge.
+
+        Args:
+            request: The Castle request parameters.
+
+        Returns:
+            SolveResponse containing the Castle solution.
+        """
+        body = {
+            "task_type": "castle",
+            "proxy": request.proxy,
+            "target_url": request.target_url,
+            "config_json": {
+                "avoidCookies": request.config_json.avoid_cookies,
+                "pk": request.config_json.pk,
+                "wUrl": request.config_json.w_url,
+                "swUrl": request.config_json.sw_url,
+            },
+        }
+        data = self._post("/v1/solve/castle", body)
+        solution = CastleSolution(
+            token=data["solution"]["token"],
+            user_agent=data["solution"]["ua"],
+        )
+        return SolveResponse(
+            success=data["success"],
+            task_id=data["taskId"],
+            service=data["service"],
+            solution=solution,
+            cost=data["cost"],
+            solve_time=data["solveTime"],
+        )
+
+    def solve_reese84(self, request: Reese84Request) -> SolveResponse[Reese84Solution]:
+        """Solve an Incapsula Reese84 challenge.
+
+        Args:
+            request: The Reese84 request parameters.
+
+        Returns:
+            SolveResponse containing the Reese84 solution.
+        """
+        body = {
+            "task_type": "reese84",
+            "proxy": request.proxy,
+            "reese84_js_url": request.reese84_js_url,
+        }
+        data = self._post("/v1/solve/reese84", body)
+        solution = Reese84Solution(
+            reese84=data["solution"]["reese84"],
+            user_agent=data["solution"]["user_agent"],
+        )
+        return SolveResponse(
+            success=data["success"],
+            task_id=data["taskId"],
+            service=data["service"],
+            solution=solution,
+            cost=data["cost"],
+            solve_time=data["solveTime"],
+        )
+
+    def solve_forter(self, request: ForterRequest) -> SolveResponse[ForterSolution]:
+        """Solve a Forter challenge.
+
+        Args:
+            request: The Forter request parameters.
+
+        Returns:
+            SolveResponse containing the Forter solution.
+        """
+        body = {
+            "task_type": "forter",
+            "proxy": request.proxy,
+            "target_url": request.target_url,
+            "forter_js_url": request.forter_js_url,
+            "site_id": request.site_id,
+        }
+        data = self._post("/v1/solve/forter", body)
+        solution = ForterSolution(
+            token=data["solution"]["token"],
+            user_agent=data["solution"]["ua"],
+        )
+        return SolveResponse(
+            success=data["success"],
+            task_id=data["taskId"],
+            service=data["service"],
+            solution=solution,
+            cost=data["cost"],
+            solve_time=data["solveTime"],
+        )
+
+    def solve_funcaptcha(
+        self, request: FuncaptchaRequest
+    ) -> SolveResponse[FuncaptchaSolution]:
+        """Solve a Funcaptcha (Arkose Labs) challenge.
+
+        Args:
+            request: The Funcaptcha request parameters.
+
+        Returns:
+            SolveResponse containing the Funcaptcha solution.
+        """
+        body = {
+            "task_type": "funcaptcha",
+            "proxy": request.proxy,
+            "target_url": request.target_url,
+            "custom_api_host": request.custom_api_host,
+            "public_key": request.public_key,
+        }
+        data = self._post("/v1/solve/funcaptcha", body)
+        solution = FuncaptchaSolution(
+            token=data["solution"]["token"],
+            user_agent=data["solution"]["ua"],
+        )
+        return SolveResponse(
+            success=data["success"],
+            task_id=data["taskId"],
+            service=data["service"],
+            solution=solution,
+            cost=data["cost"],
+            solve_time=data["solveTime"],
+        )
+
+    def solve_sbsd(self, request: SBSDRequest) -> SolveResponse[SBSDSolution]:
+        """Solve an Akamai SBSD challenge.
+
+        Args:
+            request: The SBSD request parameters.
+
+        Returns:
+            SolveResponse containing the SBSD solution.
+        """
+        body = {
+            "task_type": "sbsd",
+            "proxy": request.proxy,
+            "target_url": request.target_url,
+            "target_method": request.target_method,
+        }
+        data = self._post("/v1/solve/sbsd", body)
+        solution = SBSDSolution(
+            bm_s=data["solution"]["bm_s"],
+            bm_sc=data["solution"]["bm_sc"],
             user_agent=data["solution"]["ua"],
         )
         return SolveResponse(
