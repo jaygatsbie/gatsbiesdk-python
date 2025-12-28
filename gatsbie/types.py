@@ -52,14 +52,21 @@ class RecaptchaV3Solution:
 
 
 @dataclass
-class AkamaiSolution:
-    """Solution for Akamai challenges."""
+class AkamaiCookies:
+    """Cookies returned by Akamai."""
 
     abck: str
     bm_sz: str
-    user_agent: str
     country: Optional[str] = None
     usr_locale: Optional[str] = None
+
+
+@dataclass
+class AkamaiSolution:
+    """Solution for Akamai challenges."""
+
+    cookies: AkamaiCookies
+    user_agent: str
 
 
 @dataclass
@@ -109,10 +116,17 @@ class PerimeterXSolution:
 
 
 @dataclass
+class CloudflareWAFCookies:
+    """Cookies returned by Cloudflare WAF."""
+
+    cf_clearance: str
+
+
+@dataclass
 class CloudflareWAFSolution:
     """Solution for Cloudflare WAF challenges."""
 
-    cf_clearance: str
+    cookies: CloudflareWAFCookies
     user_agent: str
 
 

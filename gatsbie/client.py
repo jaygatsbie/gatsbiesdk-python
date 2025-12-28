@@ -6,8 +6,10 @@ import httpx
 
 from .errors import APIError, RequestError
 from .types import (
+    AkamaiCookies,
     AkamaiRequest,
     AkamaiSolution,
+    CloudflareWAFCookies,
     CloudflareWAFRequest,
     CloudflareWAFSolution,
     DatadomeRequest,
@@ -224,12 +226,16 @@ class Client:
 
         data = self._post("/v1/solve/akamai", body)
         sol = data["solution"]
+        cookies_dict = sol["cookies_dict"]
+        cookies = AkamaiCookies(
+            abck=cookies_dict["_abck"],
+            bm_sz=cookies_dict["bm_sz"],
+            country=cookies_dict.get("Country"),
+            usr_locale=cookies_dict.get("UsrLocale"),
+        )
         solution = AkamaiSolution(
-            abck=sol["_abck"],
-            bm_sz=sol["bm_sz"],
+            cookies=cookies,
             user_agent=sol["ua"],
-            country=sol.get("Country"),
-            usr_locale=sol.get("UsrLocale"),
         )
         return SolveResponse(
             success=data["success"],
@@ -287,9 +293,9 @@ class Client:
             "method": request.method,
         }
         data = self._post("/v1/solve/shape", body)
-        sol = data["solution"]
-        # Shape returns dynamic headers, extract ua separately
-        user_agent = sol.pop("ua", "")
+        sol = data["solution"].copy()
+        # Shape returns dynamic headers, extract User-Agent separately
+        user_agent = sol.pop("User-Agent", "")
         solution = ShapeSolution(
             headers=sol,
             user_agent=user_agent,
@@ -391,8 +397,12 @@ class Client:
             "target_method": request.target_method,
         }
         data = self._post("/v1/solve/cloudflare-waf", body)
+        cookies_data = data["solution"]["cookies"]
+        cookies = CloudflareWAFCookies(
+            cf_clearance=cookies_data["cf_clearance"],
+        )
         solution = CloudflareWAFSolution(
-            cf_clearance=data["solution"]["cf_clearance"],
+            cookies=cookies,
             user_agent=data["solution"]["ua"],
         )
         return SolveResponse(
