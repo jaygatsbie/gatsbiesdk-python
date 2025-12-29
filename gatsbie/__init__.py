@@ -35,8 +35,9 @@ from .types import (
     PerimeterXCookies,
     PerimeterXRequest,
     PerimeterXSolution,
-    RecaptchaV3Request,
-    RecaptchaV3Solution,
+    RecaptchaRequest,
+    RecaptchaEnterpriseRequest,
+    RecaptchaSolution,
     Reese84Request,
     Reese84Solution,
     SBSDRequest,
@@ -52,7 +53,7 @@ from .types import (
     VercelSolution,
 )
 
-__version__ = "1.0.3"
+__version__ = "1.0.4"
 
 __all__ = [
     # Client
@@ -72,7 +73,8 @@ __all__ = [
     "SolveResponse",
     # Request types
     "DatadomeRequest",
-    "RecaptchaV3Request",
+    "RecaptchaRequest",
+    "RecaptchaEnterpriseRequest",
     "AkamaiRequest",
     "VercelRequest",
     "ShapeRequest",
@@ -90,7 +92,7 @@ __all__ = [
     "SBSDRequest",
     # Solution types
     "DatadomeSolution",
-    "RecaptchaV3Solution",
+    "RecaptchaSolution",
     "AkamaiSolution",
     "VercelSolution",
     "ShapeSolution",

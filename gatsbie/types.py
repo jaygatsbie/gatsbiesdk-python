@@ -44,11 +44,10 @@ class DatadomeSolution:
 
 
 @dataclass
-class RecaptchaV3Solution:
-    """Solution for reCAPTCHA v3 challenges."""
+class RecaptchaSolution:
+    """Solution for reCAPTCHA challenges."""
 
     token: str
-    user_agent: str
 
 
 @dataclass
@@ -221,15 +220,30 @@ class DatadomeRequest:
 
 
 @dataclass
-class RecaptchaV3Request:
-    """Request for solving reCAPTCHA v3 challenges."""
+class RecaptchaRequest:
+    """Request for solving reCAPTCHA v2/v3 (Universal) challenges."""
 
     proxy: str
     target_url: str
     site_key: str
+    size: str
+    title: str
     action: Optional[str] = None
-    title: Optional[str] = None
-    enterprise: bool = False
+    ubd: bool = False
+
+
+@dataclass
+class RecaptchaEnterpriseRequest:
+    """Request for solving reCAPTCHA Enterprise challenges."""
+
+    proxy: str
+    target_url: str
+    site_key: str
+    size: str
+    title: str
+    action: Optional[str] = None
+    ubd: bool = False
+    sa: Optional[str] = None
 
 
 @dataclass

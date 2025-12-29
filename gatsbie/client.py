@@ -29,8 +29,9 @@ from .types import (
     PerimeterXCookies,
     PerimeterXRequest,
     PerimeterXSolution,
-    RecaptchaV3Request,
-    RecaptchaV3Solution,
+    RecaptchaRequest,
+    RecaptchaEnterpriseRequest,
+    RecaptchaSolution,
     Reese84Request,
     Reese84Solution,
     SBSDRequest,
@@ -183,34 +184,72 @@ class Client:
             solve_time=data["solveTime"],
         )
 
-    def solve_recaptcha_v3(
-        self, request: RecaptchaV3Request
-    ) -> SolveResponse[RecaptchaV3Solution]:
-        """Solve a reCAPTCHA v3 challenge.
+    def solve_recaptcha(
+        self, request: RecaptchaRequest
+    ) -> SolveResponse[RecaptchaSolution]:
+        """Solve a reCAPTCHA v2/v3 (Universal) challenge.
 
         Args:
-            request: The reCAPTCHA v3 request parameters.
+            request: The reCAPTCHA request parameters.
 
         Returns:
-            SolveResponse containing the reCAPTCHA v3 solution.
+            SolveResponse containing the reCAPTCHA solution.
         """
-        body = {
-            "task_type": "recaptchav3",
+        body: Dict[str, Any] = {
+            "task_type": "recaptcha",
             "proxy": request.proxy,
             "target_url": request.target_url,
             "site_key": request.site_key,
+            "size": request.size,
+            "title": request.title,
         }
         if request.action:
             body["action"] = request.action
-        if request.title:
-            body["title"] = request.title
-        if request.enterprise:
-            body["enterprise"] = request.enterprise
+        if request.ubd:
+            body["ubd"] = request.ubd
 
-        data = self._post("/v1/solve/recaptchav3", body)
-        solution = RecaptchaV3Solution(
+        data = self._post("/v1/solve/recaptcha", body)
+        solution = RecaptchaSolution(
             token=data["solution"]["token"],
-            user_agent=data["solution"]["ua"],
+        )
+        return SolveResponse(
+            success=data["success"],
+            task_id=data["taskId"],
+            service=data["service"],
+            solution=solution,
+            cost=data["cost"],
+            solve_time=data["solveTime"],
+        )
+
+    def solve_recaptcha_enterprise(
+        self, request: RecaptchaEnterpriseRequest
+    ) -> SolveResponse[RecaptchaSolution]:
+        """Solve a reCAPTCHA Enterprise challenge.
+
+        Args:
+            request: The reCAPTCHA Enterprise request parameters.
+
+        Returns:
+            SolveResponse containing the reCAPTCHA solution.
+        """
+        body: Dict[str, Any] = {
+            "task_type": "recaptcha_enterprise",
+            "proxy": request.proxy,
+            "target_url": request.target_url,
+            "site_key": request.site_key,
+            "size": request.size,
+            "title": request.title,
+        }
+        if request.action:
+            body["action"] = request.action
+        if request.ubd:
+            body["ubd"] = request.ubd
+        if request.sa:
+            body["sa"] = request.sa
+
+        data = self._post("/v1/solve/recaptcha-enterprise", body)
+        solution = RecaptchaSolution(
+            token=data["solution"]["token"],
         )
         return SolveResponse(
             success=data["success"],

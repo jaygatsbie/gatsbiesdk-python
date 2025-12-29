@@ -36,8 +36,8 @@ def main():
     # Example: Solve Datadome challenge
     # solve_datadome_example(client)
 
-    # Example: Solve reCAPTCHA v3 challenge
-    # solve_recaptcha_v3_example(client)
+    # Example: Solve reCAPTCHA challenge
+    # solve_recaptcha_example(client)
 
     # Example: Solve Akamai challenge
     # solve_akamai_example(client)
@@ -87,24 +87,23 @@ def solve_datadome_example(client: gatsbie.Client):
         handle_error(e)
 
 
-def solve_recaptcha_v3_example(client: gatsbie.Client):
+def solve_recaptcha_example(client: gatsbie.Client):
     print("Solving reCAPTCHA v3...")
 
     try:
-        resp = client.solve_recaptcha_v3(
-            gatsbie.RecaptchaV3Request(
+        resp = client.solve_recaptcha(
+            gatsbie.RecaptchaRequest(
                 proxy="http://user:pass@proxy.example.com:8080",
                 target_url="https://2captcha.com/demo/recaptcha-v3",
                 site_key="6Lcyqq8oAAAAAJE7eVJ3aZp_hnJcI6LgGdYD8lge",
-                action="demo_action",
+                size="invisible",
                 title="Google reCAPTCHA V3 demo: Sample Form with Google reCAPTCHA V3",
-                enterprise=False,
+                action="demo_action",
             )
         )
 
         print(f"Success! Task ID: {resp.task_id}")
         print(f"Token: {resp.solution.token[:50]}...")
-        print(f"User-Agent: {resp.solution.user_agent}")
         print(f"Cost: {resp.cost:.4f} credits")
         print(f"Solve Time: {resp.solve_time:.2f} ms\n")
 
