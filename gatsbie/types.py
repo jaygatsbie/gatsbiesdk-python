@@ -90,6 +90,17 @@ class ShapeSolution:
 
 
 @dataclass
+class ShapeV2Solution:
+    """Solution for Shape v2 challenges.
+
+    Returns headers and extra data from the TLS fingerprinting solver.
+    """
+
+    headers: Dict[str, str]
+    extra: Optional[Dict[str, Any]] = None
+
+
+@dataclass
 class TurnstileSolution:
     """Solution for Cloudflare Turnstile challenges."""
 
@@ -249,6 +260,32 @@ class ShapeRequest:
     shape_js_url: str
     title: str
     method: str
+
+
+@dataclass
+class ShapeV2Request:
+    """Request for solving Shape v2 challenges with TLS fingerprinting."""
+
+    url: str
+    """Target page URL."""
+
+    proxy: str
+    """Proxy URL (required)."""
+
+    pkey: Optional[str] = None
+    """Site public key (optional)."""
+
+    script_url: Optional[str] = None
+    """Shape script URL (optional)."""
+
+    request: Optional[Dict[str, str]] = None
+    """Request parameters (optional)."""
+
+    country: Optional[str] = None
+    """Country code for geo-location (optional)."""
+
+    timeout: Optional[int] = None
+    """Timeout in seconds (optional)."""
 
 
 @dataclass

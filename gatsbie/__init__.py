@@ -43,6 +43,8 @@ from .types import (
     SBSDSolution,
     ShapeRequest,
     ShapeSolution,
+    ShapeV2Request,
+    ShapeV2Solution,
     SolveResponse,
     TurnstileRequest,
     TurnstileSolution,
@@ -50,7 +52,7 @@ from .types import (
     VercelSolution,
 )
 
-__version__ = "1.0.0"
+__version__ = "1.0.3"
 
 __all__ = [
     # Client
@@ -74,6 +76,7 @@ __all__ = [
     "AkamaiRequest",
     "VercelRequest",
     "ShapeRequest",
+    "ShapeV2Request",
     "TurnstileRequest",
     "PerimeterXRequest",
     "CloudflareWAFRequest",
@@ -91,6 +94,7 @@ __all__ = [
     "AkamaiSolution",
     "VercelSolution",
     "ShapeSolution",
+    "ShapeV2Solution",
     "TurnstileSolution",
     "PerimeterXCookies",
     "PerimeterXSolution",

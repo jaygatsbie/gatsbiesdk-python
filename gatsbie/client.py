@@ -37,6 +37,8 @@ from .types import (
     SBSDSolution,
     ShapeRequest,
     ShapeSolution,
+    ShapeV2Request,
+    ShapeV2Solution,
     SolveResponse,
     TurnstileRequest,
     TurnstileSolution,
@@ -288,7 +290,7 @@ class Client:
         )
 
     def solve_shape(self, request: ShapeRequest) -> SolveResponse[ShapeSolution]:
-        """Solve a Shape antibot challenge.
+        """Solve a Shape antibot challenge (v1).
 
         Args:
             request: The Shape request parameters.
@@ -312,6 +314,50 @@ class Client:
         solution = ShapeSolution(
             headers=sol,
             user_agent=user_agent,
+        )
+        return SolveResponse(
+            success=data["success"],
+            task_id=data["taskId"],
+            service=data["service"],
+            solution=solution,
+            cost=data["cost"],
+            solve_time=data["solveTime"],
+        )
+
+    def solve_shape_v2(self, request: ShapeV2Request) -> SolveResponse[ShapeV2Solution]:
+        """Solve a Shape antibot challenge using the v2 API with TLS fingerprinting.
+
+        Args:
+            request: The Shape v2 request parameters.
+
+        Returns:
+            SolveResponse containing the Shape v2 solution with headers and extra data.
+        """
+        metadata: Dict[str, Any] = {
+            "proxy": request.proxy,
+        }
+        if request.pkey:
+            metadata["pkey"] = request.pkey
+        if request.script_url:
+            metadata["script_url"] = request.script_url
+        if request.request:
+            metadata["request"] = request.request
+        if request.country:
+            metadata["country"] = request.country
+        if request.timeout:
+            metadata["timeout"] = request.timeout
+
+        body = {
+            "url": request.url,
+            "metadata": metadata,
+        }
+        data = self._post("/v1/solve/shape-v2", body)
+        sol = data["solution"]
+        headers = sol.get("headers", {})
+        extra = {k: v for k, v in sol.items() if k != "headers"}
+        solution = ShapeV2Solution(
+            headers=headers,
+            extra=extra if extra else None,
         )
         return SolveResponse(
             success=data["success"],
